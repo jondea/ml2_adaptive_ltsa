@@ -1,4 +1,4 @@
-function [ weight_matrix ] = MakeWeightMatrix2(X, N)
+function [ weight_matrix ] = MakeWeightMatrix(X, N)
 %W=MakeWeightMatrix(X, N)
 %   X : data matrix
 %   N : matrix of neighborhoods where each row is the list of neighborhoods
@@ -12,20 +12,17 @@ weight_matrix=zeros(rN,size(X,1)-1);
 % For each noughbourhoods
 for i=1:rN
     
-    % Build the original neighbour data matrix
-    k=1;
-    for j=1:cN
-        if N(i,j)
-            nX(k,:)=X(j,:);
-            k=k+1;
-        end
+    % Delete columns with 0 to get the exact numbers of neighbours
+    current=N(i,:);
+    current=current(:,any(current,1));
+    
+    % Build the original neighbour data
+    for j=1:length(current)
+        nX(j,:)=X(N(i,j),:);
     end
     
-    % Get the number of neighbours in the neighbourhood
-    k=k-1;
-    
     % Perform the difference between xi belonging to Ni and the mean
-    centered=nX-(mean(nX)*ones(k)');
+    centered=nX-(mean(nX)*ones(length(current))');
     
     % Perform svd to get the Q matrix
     [Q, ~, ~]=svd(centered);
@@ -40,14 +37,13 @@ for i=1:rN
     end
     
     % For the ith neighbourhood the jth weight is (rest is 0)
-    for j=1:k
-        product=Q(:,d+1:k)'*(current(j)-mean(nX));
+    for j=1:length(current)
+        product=Q(:,d+1:length(current))'*(current(j)-mean(current));
         weight_matrix(i,j)=norm(product);
     end
     
 end
 
 % Normalizing Local adaptative weights
-
 
 end
