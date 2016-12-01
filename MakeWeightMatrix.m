@@ -1,7 +1,8 @@
 function [ weight_matrix ] = MakeWeightMatrix(X, N)
 %W=MakeWeightMatrix(X, N)
 %   X : data matrix
-%   N : matrix of neighborhoods where each row is the list of neighborhoods
+%   N : matrix of neighborhoods where each row is the index list of
+%   neighboors
 
 [rN, cN]=size(N);
 
