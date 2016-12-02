@@ -59,7 +59,7 @@ for i = [1:nexamples]
     S = diag(S).^2;
     
     % Calculate ri
-    p(i) = sqrt(sum(S(dims+1:end))/sum(S(1:dims)));
+    p(i) = sqrt(sum(S(dims+1:end)))/sqrt(sum(S(1:dims)));
 end
 p = sort(p);
 for i = [2:length(p)]
@@ -85,7 +85,7 @@ for i = [1:nexamples]
         S = diag(S).^2;
         
         % Calculate ri
-        r = sqrt(sum(S(dims+1:end))/sum(S(1:dims)));
+        r = sqrt(sum(S(dims+1:end)))/sqrt(sum(S(1:dims)));
         
         if (r < eta)
             kopt = k;
@@ -137,7 +137,7 @@ for i = [1:nexamples]
     
     for t = [1:size(tdata,1)]
         tdist = sqrt(sum((tdata(t,:) - tdatarecon(t,:)).^2));
-        if (tdist < eta*(Phi(:,t)))
+        if (tdist <= eta*(Phi(:,t)))
             nbhd(i,texamples(t)) = 1;
         end
     end
