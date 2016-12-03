@@ -37,7 +37,8 @@ end
 
 % Find initial K nearest neighbors
 % Kinit = k0 (we dont have a value for this)
-kinit = kmax;
+kmin = dims+2;
+kinit = kmin*3;
 maxdists = sort(dist,2);
 maxdists = maxdists(:,kinit);
 for i = [1:nexamples]
@@ -73,14 +74,14 @@ end
 eta = pideal
 
 % Neighborhood contraction
-kmin = dims+2;
+
 for i = [1:nexamples]
     kopt = nan;
     rmin = inf;
     for k = [kmax:-1:kmin]
         % Select points in neighborhood and partially normalise
         tX = X(distord(i,1:k),:);
-        tXbar = ((ones(k,1))*mean(X,1));
+        tXbar = ((ones(k,1))*mean(tX,1));
         
         % Calculate SVD
         [u,S,PC] = svd(tX-tXbar);
@@ -151,7 +152,7 @@ for i = [1:nexamples]
     % Add those within error bounds defined by eta
     for t = [1:size(tdata,1)]
         tdist = norm(tdata(t,:) - tdatarecon(t,:));
-        if (tdist <= eta*(Phi(:,t)))
+        if (tdist <= eta*norm(Phi(:,t)))
             nbhd(i,texamples(t)) = 1;
         end
     end
