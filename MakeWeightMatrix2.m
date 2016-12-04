@@ -13,7 +13,7 @@ end
 
 % Initialization of the weight matrix with zeros
 % The maximum number of neighbours is the number of samples-1 
-weight_matrix=zeros(rN,size(X,1)-1);
+weight_matrix=zeros(rN,cN);
 
 % For each noughbourhoods
 for i=1:rN
@@ -28,11 +28,11 @@ for i=1:rN
     centered = Xi - repmat(mean(Xi, 1), [k 1]);
     
     % Perform svd to get the Q matrix
-    [Q, ~, ~]=svd(centered');
+    [Q, ~, ~]=svd(centered);
     
     % For the ith neighbourhood the jth weight is (rest is 0)
     for j=1:k
-        product=Q(:,d+1:k)'*(Xi(k,:)-mean(Xi))';
+        product=Q(:,d+1:k)'*(Xi-repmat(mean(Xi),[size(Xi,1) 1]));
         weight_matrix(i,Ii(j))=norm(product);
     end
 end
@@ -46,6 +46,7 @@ for i=1:size(X,1)
     
     % Compute the sum of weights for this point
     for j=1:length(a)
+        weight_matrix(a(j),:);
         s=s+weight_matrix(a(j),b(j));
     end
     
