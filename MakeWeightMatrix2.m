@@ -33,7 +33,7 @@ for i=1:rN
     % For the ith neighbourhood the jth weight is (rest is 0)
     for j=1:k
         product=Q(:,d+1:k)'*(Xi-repmat(mean(Xi),[size(Xi,1) 1]));
-        weight_matrix(i,Ii(j))=norm(product);
+        weight_matrix(i,j)=norm(product);
     end
 end
 
@@ -52,9 +52,7 @@ for i=1:size(X,1)
     
     % Update each weight
     for j=1:length(a)
-        if s ~= 0
-            weight_matrix(a(j),b(j))=weight_matrix(a(j),b(j))/s;
-        end
+        weight_matrix(a(j),b(j))=weight_matrix(a(j),b(j))/s;
     end
 end
 
