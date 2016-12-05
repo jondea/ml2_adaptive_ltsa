@@ -48,17 +48,24 @@ function mappedX = ltsa_weighted(X, no_dims, k, eig_impl)
         kt = numel(Ii);
         Xi = X(Ii,:) - repmat(mean(X(Ii,:), 1), [kt 1]);
         Weight_MatrixI=Weight_Matrix(i,:);
-        Weight_MatrixI=Weight_MatrixI(Weight_MatrixI~=0);
-        for j=1:kt
-            Xi(j,:)=Weight_MatrixI(j)*Xi(j,:);
-        end
+        %Weight_MatrixI=Weight_MatrixI(Weight_MatrixI~=0);
+%         for j=1:kt
+            %Xi(j,:)=Weight_MatrixI(j)*Xi(j,:);
+%         end
         W = Xi * Xi'; 
-        W = (W + W') / 2;
+        W
+        Xi
+        Weight_MatrixI
+        Ii
+        
+        W =  W * diag(1./Weight_MatrixI) ;
+%         W = (W + W') / 2;
         
         % Compute local information by computing d largest eigenvectors of W
         [Vi, Si] = schur(W);
         [s, Ji] = sort(-diag(Si));
-		if length(Ji) < no_dims
+		
+        if length(Ji) < no_dims
 			no_dims = length(Ji);
 			warning(['Target dimensionality reduced to ' num2str(no_dims) '...']);
 		end

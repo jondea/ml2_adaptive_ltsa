@@ -33,26 +33,25 @@ for i=1:rN
     % For the ith neighbourhood the jth weight is (rest is 0)
     for j=1:k
         product=Q(:,d+1:k)'*(Xi-repmat(mean(Xi),[size(Xi,1) 1]));
-        weight_matrix(i,j)=norm(product);
+        weight_matrix(i,j)=norm(product)+(10^-3);
     end
 end
-
-% Normalizing Local adaptative weights
+% Compute the sum matrix
 for i=1:size(X,1)
-    s=0;
-    
-    % For each example we look for Neighbourhood where it is
+    s(i)=0;
     [a, b]=find(N==i);
-    
-    % Compute the sum of weights for this point
     for j=1:length(a)
         weight_matrix(a(j),:);
-        s=s+weight_matrix(a(j),b(j));
+        s(i)=s(i)+weight_matrix(a(j),b(j));
     end
-    
+end
+s
+% Normalizing Local adaptative weights
+for i=1:size(X,1)    
     % Update each weight
+    [a, b]=find(N==i);
     for j=1:length(a)
-        weight_matrix(a(j),b(j))=weight_matrix(a(j),b(j))/s;
+        weight_matrix(a(j),b(j))=weight_matrix(a(j),b(j))/s(i);
     end
 end
 
